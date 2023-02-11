@@ -10,6 +10,8 @@ class Note
         this.titre = titre;
         this.contenu = contenu;
         this.date_creation = new Date();
+
+        if (titre === "") this.setDefaultName();
     }
 
     setTitre(titre)
@@ -137,10 +139,11 @@ let noteFormView = {
 
     validate() {
         console.log("Clic: Valider le formulaire")
+        noteFormView.hide();
         let titre = document.querySelector('#form_add_note_title').value;
         let contenu = document.querySelector('#form_add_note_text').value;
         let note = new Note(titre, contenu);
-        if (titre === "") note.setDefaultName();
+
 
         etatGlobal.indexNoteCourante = etatGlobal.listNote.addNote(note);
         noteListMenuView.displayItem(note);
@@ -158,7 +161,7 @@ let noteFormView = {
 let mainMenuView = {
     addHandler()
     {
-        console.log("Clic: ajout d'une note");
+        console.log("Clic: Nouvelle note");
         noteFormView.display();
     },
 
@@ -183,20 +186,27 @@ let etatGlobal = {
         mainMenuView.init();
         etatGlobal.listNote = new NoteList();
 
-        document.querySelector('#noteListMenu').onclick =
+        document.querySelector('#noteListMenu, #noteListMenu > :not(*)').onclick =
             function (e)
             {
+                let cible = e.target;
+                while (!cible.classList.contains("note_list_item"))
+                {
+                    cible = e.target.parentNode;
+                }
+
                 let nodes = e.currentTarget.childNodes;
                 for (let i = 0 ; i < nodes.length ; i++)
                 {
                     nodes[i].classList.remove('note_list_item-selected');
-                    if(nodes[i] === e.target){
+                    if (nodes[i] === cible)
+                    {
                         let note = etatGlobal.listNote.getNoteById(i);
                         let vueNote = new NoteView(note);
-                        vueNote.afficher();
+                        vueNote.afficherHtml();
                     }
                 }
-                e.target.classList.add('note_list_item-selected');
+                cible.classList.add('note_list_item-selected');
 
             };
     }
