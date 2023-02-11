@@ -1,6 +1,10 @@
 'use strict'
 
 /*
+--- CLASSES ---
+ */
+
+/*
 --- Classe Note ---
  */
 class Note
@@ -83,10 +87,45 @@ class NoteView
         document.querySelector('#currentNoteView').innerHTML =
             "<h1>" + this.note.titre + "</h1><p>" + this.noteHtml + "</p>";
     }
+
+    masquerHtml()
+    {
+        document.querySelector('#currentNoteView').innerHTML = "";
+    }
 }
 
 /*
---- Objet noteListMenuView ---
+--- Classe NoteListe ---
+ */
+class NoteList
+{
+    constructor() {
+        this.listeNotes = [];
+    }
+
+    addNote(note)
+    {
+        this.listeNotes.push(note);
+    }
+
+    getNoteById (i)
+    {
+        return this.listeNotes[i];
+    }
+
+    getList()
+    {
+        return this.listeNotes;
+    }
+}
+
+
+/*
+--- OBJETS ---
+ */
+
+/*
+--- Objet représentant la liste des notes créées ---
  */
 let noteListMenuView = {
     noteListMenu: document.querySelector("#noteListMenu"),
@@ -118,11 +157,39 @@ let noteListMenuView = {
         for (let noteListMenuElement of this.noteListMenu.childNodes) {
             noteListMenuElement.classList.remove("note_list_item-selected");
         }
+    },
+
+    noteSelection() {
+        return function (e) {
+            let cible = e.target;
+            while (!cible.classList.contains("note_list_item")) {
+                cible = e.target.parentNode;
+            }
+
+            let nodes = e.currentTarget.childNodes;
+            for (let i = 0; i < nodes.length; i++) {
+                nodes[i].classList.remove('note_list_item-selected');
+                if (nodes[i] === cible) {
+                    let note = etatGlobal.listNote.getNoteById(i);
+                    let vueNote = new NoteView(note);
+                    vueNote.afficherHtml();
+                }
+            }
+            cible.classList.add('note_list_item-selected');
+
+        };
+    },
+
+    init()
+    {
+        console.log("Initialisation de la liste de notes")
+        document.querySelector('#noteListMenu').onclick =
+            noteListMenuView.noteSelection();
     }
 }
 
 /*
---- Objet noteFormView ---
+--- Objet représentant le formulaire d'édition d'une note ---
  */
 let noteFormView = {
     form: document.querySelector(".create_edit_note").classList,
@@ -151,18 +218,18 @@ let noteFormView = {
         let vueNote = new NoteView(note);
         vueNote.afficherHtml()
         console.log("Formulaire validé")
-
     }
 };
 
 /*
---- Objet mainMenuView ---
+--- Objet représentant le menu de navigation ---
  */
 let mainMenuView = {
     addHandler()
     {
         console.log("Clic: Nouvelle note");
         noteFormView.display();
+        document.querySelector("#currentNoteView").innerHTML = "";
     },
 
     init()
@@ -173,9 +240,8 @@ let mainMenuView = {
     }
 }
 
-
 /*
---- Objet etatGlobal ---
+--- Objet représentant l'état global de l'application ---
  */
 let etatGlobal = {
     listNote : null,
@@ -185,58 +251,12 @@ let etatGlobal = {
     {
         mainMenuView.init();
         etatGlobal.listNote = new NoteList();
-
-        document.querySelector('#noteListMenu, #noteListMenu > :not(*)').onclick =
-            function (e)
-            {
-                let cible = e.target;
-                while (!cible.classList.contains("note_list_item"))
-                {
-                    cible = e.target.parentNode;
-                }
-
-                let nodes = e.currentTarget.childNodes;
-                for (let i = 0 ; i < nodes.length ; i++)
-                {
-                    nodes[i].classList.remove('note_list_item-selected');
-                    if (nodes[i] === cible)
-                    {
-                        let note = etatGlobal.listNote.getNoteById(i);
-                        let vueNote = new NoteView(note);
-                        vueNote.afficherHtml();
-                    }
-                }
-                cible.classList.add('note_list_item-selected');
-
-            };
+        noteListMenuView.init();
     }
 }
 
 
 /*
---- Classe NoteListe ---
+--- INITIALISATION ---
  */
-class NoteList
-{
-    constructor() {
-        this.listeNotes = [];
-    }
-
-    addNote(note)
-    {
-        this.listeNotes.push(note);
-    }
-
-    getNoteById (i)
-    {
-        return this.listeNotes[i];
-    }
-
-    getList()
-    {
-        return this.listeNotes;
-    }
-}
-
-
 window.onload = etatGlobal.init;
