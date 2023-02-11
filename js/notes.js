@@ -3,21 +3,47 @@
 /*
 --- Classe Note ---
  */
-
 class Note
 {
-    constructor(titre, contenu) {
+    constructor(titre, contenu)
+    {
         this.titre = titre;
         this.contenu = contenu;
         this.date_creation = new Date();
     }
+
     setTitre(titre)
     {
         this.titre = titre;
     }
-    setContenu(texte)
+
+    setContenu(contenu)
     {
         this.contenu = contenu;
+    }
+
+    setDefaultName()
+    {
+        this.titre = this.defaultDate();
+    }
+
+    defaultDate()
+    {
+        let dc = this.date_creation;
+
+        const yyyy = dc.getFullYear();
+        let mm = dc.getMonth() + 1; // Les mois commencent à 0 !
+        let dd = dc.getDate();
+        let hh = dc.getHours();
+        let mn = dc.getMinutes();
+
+        if (mm < 10) mm = '0' + mm;
+        if (dd < 10) dd = '0' + dd;
+        if (hh < 10) hh = '0' + hh;
+        if (mn < 10) mn = '0' + mn;
+
+
+        return yyyy + "-" + mm + "-" + dd + "_" + hh + mn;
     }
 }
 
@@ -32,16 +58,18 @@ class NoteView
         this.note = note;
         this.noteHtml = "";
     }
+
     convertirMd2Html()
     {
         let conv = new showdown.Converter();
-        return  conv.makeHtml(this.note.contenu);
+        return conv.makeHtml(this.note.contenu);
     }
+
     afficherHtml()
     {
         this.noteHtml = this.convertirMd2Html();
-        document.querySelector('#currentNoteView').innerHTML = `<h1>${this.note.titre}
-        </h1> <p>${this.noteHtml}</p>`;
+        document.querySelector('#currentNoteView').innerHTML =
+            "<h1>" + this.note.titre + "</h1><p>" + this.noteHtml + "</p>";
     }
 }
 
@@ -49,21 +77,28 @@ class NoteView
 --- Objet noteListMenuView ---
  */
 let noteListMenuView = {
-    displayItem(note){
-        let section_noteList = document.querySelector("#noteListMenu");
+    noteListMenu: document.querySelector("#noteListMenu"),
+
+    displayItem(note)
+    {
+        this.unselectAllItems();
+
         let p = document.createElement("div");
-        p.setAttribute("class","note_list_item");
+        p.setAttribute("class","note_list_item note_list_item-selected");
 
         let titre = note.titre;
-        if(note.titre === ""){
-            titre = "Titre";
+
+        let noeudTitre = document.createTextNode(titre);
+        p.appendChild(noeudTitre);
+        this.noteListMenu.appendChild(p);
+
+    },
+
+    unselectAllItems()
+    {
+        for (let noteListMenuElement of this.noteListMenu.childNodes) {
+            noteListMenuElement.classList.remove("note_list_item-selected");
         }
-
-
-        let titre_noteList = document.createTextNode(titre);
-        p.appendChild(titre_noteList);
-        section_noteList.appendChild(p);
-
     }
 }
 
@@ -74,24 +109,29 @@ let noteFormView = {
     form: document.querySelector(".create_edit_note").classList,
 
     display() {
+        console.log("Afficher le formulaire");
         this.form.remove("create_edit_note-hidden");
     },
 
     hide() {
+        console.log("Masquer le formulaire");
         this.form.add("create_edit_note-hidden");
     },
 
     validate() {
+        console.log("Clic: Valider le formulaire")
         let titre = document.querySelector('#form_add_note_title').value;
         let contenu = document.querySelector('#form_add_note_text').value;
         let note = new Note(titre, contenu);
+        if (titre === "") note.setDefaultName();
 
-        //etatGlobal.indexNoteCourante = etatGlobal.listNote.addNote(note);
-        //noteListMenuView.displayItem(note);
+        etatGlobal.indexNoteCourante = etatGlobal.listNote.addNote(note);
+        noteListMenuView.displayItem(note);
 
         let vueNote = new NoteView(note);
         vueNote.afficherHtml()
-        //form.
+        console.log("Formulaire validé")
+
     }
 };
 
@@ -99,11 +139,14 @@ let noteFormView = {
 --- Objet mainMenuView ---
  */
 let mainMenuView = {
-    addHandler() {
-        console.log('Clic ajout note');
+    addHandler()
+    {
+        console.log("Clic: ajout d'une note");
         noteFormView.display();
     },
-    init(){
+
+    init()
+    {
         console.log("Initialisation du menu")
         document.querySelector('#add').onclick = this.addHandler;
         document.querySelector('#form_add_note_valid').onclick = noteFormView.validate;
@@ -118,16 +161,17 @@ let etatGlobal = {
     listNote : null,
     indexNoteCourante : null,
 
-    init(){
+    init()
+    {
         mainMenuView.init();
         etatGlobal.listNote = new NoteList();
-
 
         document.querySelector('#noteListMenu').onclick =
             function (e)
             {
                 let nodes = e.currentTarget.childNodes;
-                for (let i = 0 ; i < nodes.length ; i++){
+                for (let i = 0 ; i < nodes.length ; i++)
+                {
                     nodes[i].classList.remove('note_list_item-selected');
                     if(nodes[i] === e.target){
                         let note = etatGlobal.listNote.getNoteById(i);
