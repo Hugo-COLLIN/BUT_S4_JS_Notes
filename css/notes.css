@@ -1,0 +1,77 @@
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+nav {
+  flex-grow: 0;
+}
+.noteapp_menu {
+  display: flex;
+  flex-direction: row;
+  border-top: 1px solid dimgrey;
+  border-bottom: 1px solid dimgrey;
+}
+
+.noteapp_menu li {
+  list-style: none;
+  padding: 1rem;
+}
+.noteapp_menu li:hover {
+  color: white;
+  background-color: black;
+}
+
+.noteapp_content {
+  flex-grow: 1;
+  border-bottom: 1px solid dimgrey;
+  display: flex;
+  flex-direction: row;
+}
+
+.note_list {
+  flex-basis: 20%;
+  flex-grow: 0;
+  background-color: dimgrey;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+.note_list_item {
+  color: gainsboro;
+  flex-basis: 2rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid black;
+  padding: 0.5rem;
+}
+.note_list_item:hover {
+  color: white;
+}
+.note_list_item-selected {
+  background-color: gainsboro;
+  color: dimgrey;
+}
+
+.main_note {
+  padding: 1rem;
+  flex-grow: 1;
+}
+
+.create_edit_note {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.create_edit_note-hidden {
+  display: none;
+}
+
+.create_edit_note textarea {
+  height: 20rem;
+  border-color: gainsboro;
+}
+.create_edit_note button {
+  color: gainsboro;
+  background-color: dimgrey;
+}
