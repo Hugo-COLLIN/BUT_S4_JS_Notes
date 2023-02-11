@@ -27,7 +27,7 @@ class Note
         this.titre = this.defaultDate();
     }
 
-    defaultDate()
+    defaultDate(format = 0)
     {
         let dc = this.date_creation;
 
@@ -36,14 +36,24 @@ class Note
         let dd = dc.getDate();
         let hh = dc.getHours();
         let mn = dc.getMinutes();
+        let ss = dc.getSeconds();
 
         if (mm < 10) mm = '0' + mm;
         if (dd < 10) dd = '0' + dd;
         if (hh < 10) hh = '0' + hh;
         if (mn < 10) mn = '0' + mn;
+        if (ss < 10) ss = '0' + ss;
 
-
-        return yyyy + "-" + mm + "-" + dd + "_" + hh + mn;
+        let res;
+        switch (format) {
+            case 1 :
+                res = "Créée le " + dd + "/" + mm + "/" + yyyy + " à " + hh + ":" + mn + ":" + ss;
+                break;
+            case 0 :
+                res = yyyy + "-" + mm + "-" + dd + "_" + hh + "-" + mn + "-" + ss;
+                break;
+        }
+        return res;
     }
 }
 
@@ -83,14 +93,21 @@ let noteListMenuView = {
     {
         this.unselectAllItems();
 
-        let p = document.createElement("div");
-        p.setAttribute("class","note_list_item note_list_item-selected");
+        let div = document.createElement("div");
+        div.setAttribute("class","note_list_item note_list_item-selected");
 
-        let titre = note.titre;
+        let pTitre = document.createElement("p");
+        let pDate = document.createElement("small");
 
-        let noeudTitre = document.createTextNode(titre);
-        p.appendChild(noeudTitre);
-        this.noteListMenu.appendChild(p);
+        let noeudTitre = document.createTextNode(note.titre);
+        let noeudDate = document.createTextNode(note.defaultDate(1));
+
+        pTitre.appendChild(noeudTitre);
+        pDate.appendChild(noeudDate);
+
+        div.appendChild(pTitre);
+        div.appendChild(pDate);
+        this.noteListMenu.appendChild(div);
 
     },
 
