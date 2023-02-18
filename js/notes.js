@@ -108,6 +108,17 @@ class NoteList
         this.listeNotes.push(note);
     }
 
+    supNote(note)
+    {
+        console.log(this.listeNotes);
+        const index = this.listeNotes.indexOf(note);
+        console.log(index)
+        if (index > -1) { // only splice array when item is found
+            this.listeNotes.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        console.log(this.listeNotes);
+    }
+
     getNoteById (i)
     {
         return this.listeNotes[i];
@@ -150,6 +161,12 @@ let noteListMenuView = {
         div.appendChild(pDate);
         this.noteListMenu.appendChild(div);
 
+    },
+
+    removeItem(note)
+    {
+        const elt = document.querySelector(".note_list_item-selected");
+        elt.remove();
     },
 
     unselectAllItems()
@@ -232,10 +249,21 @@ let mainMenuView = {
         document.querySelector("#currentNoteView").innerHTML = "";
     },
 
+    delHandler()
+    {
+        console.log("Clic: Supprimer la note courante");
+        let note = etatGlobal.listNote.getNoteById(etatGlobal.indexNoteCourante);
+        console.log(note)
+        etatGlobal.listNote.supNote(note);
+        noteListMenuView.removeItem(note);
+        document.querySelector("#currentNoteView").innerHTML = "";
+    },
+
     init()
     {
         console.log("Initialisation du menu")
         document.querySelector('#add').onclick = this.addHandler;
+        document.querySelector('#del').onclick = this.delHandler;
         document.querySelector('#form_add_note_valid').onclick = noteFormView.validate;
     }
 }
