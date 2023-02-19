@@ -225,6 +225,12 @@ let noteFormView = {
         this.form.add("create_edit_note-hidden");
     },
 
+    clear()
+    {
+        document.querySelector("#form_add_note_title").innerHTML = "";
+        document.querySelector("#form_add_note_text").innerHTML = "contenu de la note";
+    },
+
     validate() {
         console.log("Clic: Valider le formulaire")
         noteFormView.hide();
@@ -237,7 +243,8 @@ let noteFormView = {
         noteListMenuView.displayItem(note);
 
         let vueNote = new NoteView(note);
-        vueNote.afficherHtml()
+        vueNote.afficherHtml();
+        noteFormView.clear();
         console.log("Formulaire validé")
     }
 };
