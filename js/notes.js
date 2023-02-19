@@ -110,11 +110,9 @@ class NoteList
 
     supNote(noteId)
     {
-        //console.log(noteId)
         if (noteId > -1) { // only splice array when item is found
             this.listeNotes.splice(noteId, 1); // 2nd parameter means remove one item only
         }
-        //console.log(this.listeNotes);
     }
 
     getIdByNote (note)
@@ -127,8 +125,6 @@ class NoteList
 
     getNoteById (i)
     {
-        console.log(i)
-        console.log(this.listeNotes)
         return this.listeNotes[i];
     }
 
@@ -238,8 +234,6 @@ let noteFormView = {
 
         etatGlobal.listNote.addNote(note);
         etatGlobal.indexNoteCourante = etatGlobal.listNote.getIdByNote(note);
-        // console.log(note);
-        // console.log(etatGlobal.indexNoteCourante);
         noteListMenuView.displayItem(note);
 
         let vueNote = new NoteView(note);
@@ -263,7 +257,6 @@ let mainMenuView = {
     {
         console.log("Clic: Supprimer la note courante");
         let noteId = etatGlobal.indexNoteCourante;
-        console.log(etatGlobal.indexNoteCourante)
         etatGlobal.listNote.supNote(noteId);
         let note = etatGlobal.listNote.getNoteById(noteId);
         noteListMenuView.removeItem(note);
@@ -272,7 +265,7 @@ let mainMenuView = {
 
     init()
     {
-        console.log("Initialisation du menu")
+        console.log("Initialisation du menu");
         document.querySelector('#add').onclick = this.addHandler;
         document.querySelector('#del').onclick = this.delHandler;
         document.querySelector('#form_add_note_valid').onclick = noteFormView.validate;
