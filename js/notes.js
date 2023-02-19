@@ -108,19 +108,27 @@ class NoteList
         this.listeNotes.push(note);
     }
 
-    supNote(note)
+    supNote(noteId)
     {
-        console.log(this.listeNotes);
-        const index = this.listeNotes.indexOf(note);
-        console.log(index)
-        if (index > -1) { // only splice array when item is found
-            this.listeNotes.splice(index, 1); // 2nd parameter means remove one item only
+        //console.log(noteId)
+        if (noteId > -1) { // only splice array when item is found
+            this.listeNotes.splice(noteId, 1); // 2nd parameter means remove one item only
         }
-        console.log(this.listeNotes);
+        //console.log(this.listeNotes);
+    }
+
+    getIdByNote (note)
+    {
+        for (let i = 0 ; i < this.listeNotes.length ; i ++) {
+            if (this.listeNotes[i] === note)
+                return i;
+        }
     }
 
     getNoteById (i)
     {
+        console.log(i)
+        console.log(this.listeNotes)
         return this.listeNotes[i];
     }
 
@@ -228,8 +236,10 @@ let noteFormView = {
         let contenu = document.querySelector('#form_add_note_text').value;
         let note = new Note(titre, contenu);
 
-
-        etatGlobal.indexNoteCourante = etatGlobal.listNote.addNote(note);
+        etatGlobal.listNote.addNote(note);
+        etatGlobal.indexNoteCourante = etatGlobal.listNote.getIdByNote(note);
+        // console.log(note);
+        // console.log(etatGlobal.indexNoteCourante);
         noteListMenuView.displayItem(note);
 
         let vueNote = new NoteView(note);
@@ -252,9 +262,10 @@ let mainMenuView = {
     delHandler()
     {
         console.log("Clic: Supprimer la note courante");
-        let note = etatGlobal.listNote.getNoteById(etatGlobal.indexNoteCourante);
-        console.log(note)
-        etatGlobal.listNote.supNote(note);
+        let noteId = etatGlobal.indexNoteCourante;
+        console.log(etatGlobal.indexNoteCourante)
+        etatGlobal.listNote.supNote(noteId);
+        let note = etatGlobal.listNote.getNoteById(noteId);
         noteListMenuView.removeItem(note);
         document.querySelector("#currentNoteView").innerHTML = "";
     },
