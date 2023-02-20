@@ -95,7 +95,7 @@ class NoteView
 }
 
 /*
---- Classe NoteListe ---
+--- Classe NoteList ---
  */
 class NoteList
 {
@@ -108,10 +108,17 @@ class NoteList
         this.listeNotes.push(note);
     }
 
-    supNote(noteId)
+    delNote(noteId)
     {
         if (noteId > -1) { // only splice array when item is found
             this.listeNotes.splice(noteId, 1); // 2nd parameter means remove one item only
+        }
+    }
+
+    editNote(noteId, newNote)
+    {
+        if (noteId > -1) {
+            this.listeNotes[noteId] = newNote;
         }
     }
 
@@ -167,10 +174,11 @@ let noteListMenuView = {
 
     },
 
-    removeItem(note)
+    removeCurrentItem()
     {
         const elt = document.querySelector(".note_list_item-selected");
-        elt.remove();
+        //if (typeof elt !== null)
+            elt.remove();
     },
 
     unselectAllItems()
@@ -227,8 +235,8 @@ let noteFormView = {
 
     clear()
     {
-        document.querySelector("#form_add_note_title").innerHTML = "";
-        document.querySelector("#form_add_note_text").innerHTML = "contenu de la note";
+        document.getElementById("form_add_note_title").value = "";
+        document.getElementById("form_add_note_text").value = "";
     },
 
     validate() {
@@ -244,6 +252,7 @@ let noteFormView = {
 
         let vueNote = new NoteView(note);
         vueNote.afficherHtml();
+        
         noteFormView.clear();
         console.log("Formulaire validé")
     }
@@ -264,9 +273,9 @@ let mainMenuView = {
     {
         console.log("Clic: Supprimer la note courante");
         let noteId = etatGlobal.indexNoteCourante;
-        etatGlobal.listNote.supNote(noteId);
+        etatGlobal.listNote.delNote(noteId);
         let note = etatGlobal.listNote.getNoteById(noteId);
-        noteListMenuView.removeItem(note);
+        noteListMenuView.removeCurrentItem();
         document.querySelector("#currentNoteView").innerHTML = "";
     },
 
