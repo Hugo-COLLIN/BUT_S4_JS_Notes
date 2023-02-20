@@ -239,6 +239,15 @@ let noteFormView = {
         document.getElementById("form_add_note_text").value = "";
     },
 
+    edit()
+    {
+        const n = etatGlobal.listNote.getNoteById(etatGlobal.indexNoteCourante);
+        console.log(n);
+        document.getElementById("form_add_note_title").value = n.titre;
+        document.getElementById("form_add_note_text").value = n.contenu;
+        noteFormView.display();
+    },
+
     validate() {
         console.log("Clic: Valider le formulaire")
         noteFormView.hide();
@@ -279,11 +288,19 @@ let mainMenuView = {
         document.querySelector("#currentNoteView").innerHTML = "";
     },
 
+    editHandler()
+    {
+        console.log("Clic: Modifier la note courante");
+        noteFormView.edit()
+        document.querySelector("#currentNoteView").innerHTML = "";
+    },
+
     init()
     {
         console.log("Initialisation du menu");
         document.querySelector('#add').onclick = this.addHandler;
         document.querySelector('#del').onclick = this.delHandler;
+        document.querySelector('#edit').onclick = this.editHandler;
         document.querySelector('#form_add_note_valid').onclick = noteFormView.validate;
     }
 }
