@@ -305,7 +305,7 @@ let noteFormView = {
             console.log("ON MODIFIE")
             console.log("Etat !:" +  etatGlobal.indexNoteCourante)
             console.log(note)
-            this.listNote.editNote(etatGlobal.indexNoteCourante, note);
+            etatGlobal.listNote.editNote(etatGlobal.indexNoteCourante, note);
         }
         else
         {
