@@ -53,7 +53,7 @@ class Note
         let res;
         switch (format) {
             case 1 :
-                res = "Créée le " + dd + "/" + mm + "/" + yyyy + " à " + hh + ":" + mn + ":" + ss;
+                res = "Modifiée le " + dd + "/" + mm + "/" + yyyy + " à " + hh + ":" + mn + ":" + ss;
                 break;
             case 0 :
                 res = yyyy + "-" + mm + "-" + dd + "_" + hh + "-" + mn + "-" + ss;
@@ -186,6 +186,13 @@ let noteListMenuView = {
             elt.remove();
     },
 
+    modifyCurrentItem(note)
+    {
+        const elt = document.querySelector(".note_list_item-selected");
+        elt.querySelector("p").innerHTML = note.titre;
+        elt.querySelector("small").innerHTML = note.defaultDate(1);
+    },
+
     unselectAllItems()
     {
         for (let noteListMenuElement of this.noteListMenu.childNodes) {
@@ -306,6 +313,7 @@ let noteFormView = {
             console.log("Etat !:" +  etatGlobal.indexNoteCourante)
             console.log(note)
             etatGlobal.listNote.editNote(etatGlobal.indexNoteCourante, note);
+            noteListMenuView.modifyCurrentItem(note);
         }
         else
         {
@@ -313,10 +321,10 @@ let noteFormView = {
             etatGlobal.listNote.addNote(note);
             //etatGlobal.indexNoteCourante = etatGlobal.listNote.getIdByNote(note);
             //etatGlobal.indexNoteCourante = etatGlobal.listNote.getLength() - 1;
-            console.log("Etat !:" +  etatGlobal.indexNoteCourante)
+            console.log("Etat !:" +  etatGlobal.indexNoteCourante);
+            noteListMenuView.displayItem(note);
         }
 
-        noteListMenuView.displayItem(note);
 
         let vueNote = new NoteView(note);
         vueNote.afficherHtml();
