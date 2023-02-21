@@ -1,4 +1,4 @@
-'use strict'
+//'use strict'
 
 /*
 --- CLASSES ---
@@ -222,6 +222,7 @@ let noteListMenuView = {
  */
 let noteFormView = {
     form: document.querySelector(".create_edit_note").classList,
+    isEditing: false,
 
     display() {
         console.log("Afficher le formulaire");
@@ -241,6 +242,7 @@ let noteFormView = {
 
     edit()
     {
+        this.isEditing = true;
         const n = etatGlobal.listNote.getNoteById(etatGlobal.indexNoteCourante);
         console.log(n);
         document.getElementById("form_add_note_title").value = n.titre;
@@ -255,15 +257,32 @@ let noteFormView = {
         let contenu = document.querySelector('#form_add_note_text').value;
         let note = new Note(titre, contenu);
 
-        etatGlobal.listNote.addNote(note);
-        etatGlobal.indexNoteCourante = etatGlobal.listNote.getIdByNote(note);
+        //TODO
+        console.log(typeof etatGlobal.indexNoteCourante);
+        console.log(etatGlobal.indexNoteCourante);
+        //if (typeof etatGlobal.indexNoteCourante === "undefined") console.log("c'est bon")
+        console.log(etatGlobal.listNote.getList().length)
+        //if (etatGlobal.indexNoteCourante === null || etatGlobal.indexNoteCourante >= etatGlobal.listNote.getList().length)
+        if (!this.isEditing)
+        {
+            console.log("c'est bon")
+            etatGlobal.listNote.addNote(note);
+            etatGlobal.indexNoteCourante = etatGlobal.listNote.getIdByNote(note);
+        }
+        //if (etatGlobal.indexNoteCourante >= this.listeNotes.length)
+        else
+        {
+            this.listeNotes.editNote(etatGlobal.indexNoteCourante, note);
+        }
+
         noteListMenuView.displayItem(note);
 
         let vueNote = new NoteView(note);
         vueNote.afficherHtml();
         
         noteFormView.clear();
-        console.log("Formulaire validé")
+        this.isEditing = false;
+        console.log("Formulaire validé");
     }
 };
 
