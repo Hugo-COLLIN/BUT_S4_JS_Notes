@@ -199,6 +199,7 @@ let noteListMenuView = {
             for (let i = 0; i < nodes.length; i++) {
                 nodes[i].classList.remove('note_list_item-selected');
                 if (nodes[i] === cible) {
+                    etatGlobal.indexNoteCourante = i;
                     let note = etatGlobal.listNote.getNoteById(i);
                     let vueNote = new NoteView(note);
                     vueNote.afficherHtml();
@@ -222,7 +223,7 @@ let noteListMenuView = {
  */
 let noteFormView = {
     form: document.querySelector(".create_edit_note").classList,
-    isEditing: false,
+    isEditing: false, // TODO del
 
     display() {
         console.log("Afficher le formulaire");
@@ -258,20 +259,22 @@ let noteFormView = {
         let note = new Note(titre, contenu);
 
         //TODO
+        console.log("EDIT mode : " + this.isEditing)
         console.log(typeof etatGlobal.indexNoteCourante);
         console.log(etatGlobal.indexNoteCourante);
         //if (typeof etatGlobal.indexNoteCourante === "undefined") console.log("c'est bon")
-        console.log(etatGlobal.listNote.getList().length)
+        console.log(etatGlobal.listNote.getList()/*.length*/)
         //if (etatGlobal.indexNoteCourante === null || etatGlobal.indexNoteCourante >= etatGlobal.listNote.getList().length)
         if (!this.isEditing)
         {
-            console.log("c'est bon")
+            console.log("ON CREE")
             etatGlobal.listNote.addNote(note);
             etatGlobal.indexNoteCourante = etatGlobal.listNote.getIdByNote(note);
         }
         //if (etatGlobal.indexNoteCourante >= this.listeNotes.length)
         else
         {
+            console.log("ON MODIFIE")
             this.listeNotes.editNote(etatGlobal.indexNoteCourante, note);
         }
 
@@ -282,6 +285,7 @@ let noteFormView = {
         
         noteFormView.clear();
         this.isEditing = false;
+        console.log(etatGlobal.listNote.getList()/*.length*/)
         console.log("Formulaire validé");
     }
 };
