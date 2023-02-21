@@ -45,9 +45,17 @@ nav {
   border-bottom: 1px solid black;
   padding: 0.5rem;
 }
+
 .note_list_item:hover {
   color: white;
 }
+
+.note_list_item > *
+{
+  cursor:pointer!important;
+  pointer-events: auto!important;
+}
+
 .note_list_item-selected {
   background-color: gainsboro;
   color: dimgrey;
