@@ -1,4 +1,4 @@
-//'use strict'
+'use strict'
 
 /*
 --- CLASSES ---
@@ -182,8 +182,7 @@ let noteListMenuView = {
     removeCurrentItem()
     {
         const elt = document.querySelector(".note_list_item-selected");
-        //if (typeof elt !== null)
-            elt.remove();
+        elt.remove();
     },
 
     modifyCurrentItem(note)
@@ -218,7 +217,8 @@ let noteListMenuView = {
                 }
             }
             cible.classList.add('note_list_item-selected');
-
+            noteFormView.hide();
+            noteFormView.clear();
         };
     },
 
@@ -235,7 +235,6 @@ let noteListMenuView = {
  */
 let noteFormView = {
     form: document.querySelector(".create_edit_note").classList,
-    isEditing: false, // TODO del
 
     display() {
         console.log("Afficher le formulaire");
@@ -255,8 +254,6 @@ let noteFormView = {
 
     edit()
     {
-        //noteFormView.isEditing = true;
-        //console.log("EDIT mode e: " + this.isEditing)
         const n = etatGlobal.listNote.getNoteById(etatGlobal.indexNoteCourante);
         document.getElementById("form_add_note_title").value = n.titre;
         document.getElementById("form_add_note_text").value = n.contenu;
@@ -266,7 +263,6 @@ let noteFormView = {
     create()
     {
         etatGlobal.indexNoteCourante = etatGlobal.listNote.getLength();
-        //noteFormView.isEditing = false;
         noteFormView.display();
     },
 
@@ -277,36 +273,6 @@ let noteFormView = {
         let contenu = document.querySelector('#form_add_note_text').value;
         let note = new Note(titre, contenu);
 
-        //TODO
-        //console.log("EDIT mode v: " + this.isEditing)
-        //console.log(typeof etatGlobal.indexNoteCourante);
-        //console.log(etatGlobal.indexNoteCourante);
-        //if (typeof etatGlobal.indexNoteCourante === "undefined") console.log("c'est bon")
-        //console.log(etatGlobal.listNote.getList()/*.length*/)
-        //if (etatGlobal.indexNoteCourante === null || etatGlobal.indexNoteCourante >= etatGlobal.listNote.getList().length)
-        //if (!this.isEditing)
-        //console.log(etatGlobal.listNote.getLength())
-        /*
-        if (etatGlobal.listNote.getLength() === etatGlobal.indexNoteCourante)
-        {
-            console.log("ON CREE")
-            etatGlobal.listNote.addNote(note);
-            etatGlobal.indexNoteCourante = etatGlobal.listNote.getIdByNote(note);
-        }
-        //if (etatGlobal.indexNoteCourante >= this.listeNotes.length)
-        else
-        {
-            console.log("ON MODIFIE")
-            console.log(etatGlobal.indexNoteCourante)
-            console.log(note)
-            this.listNote.editNote(etatGlobal.indexNoteCourante, note);
-        }*/
-
-        //etatGlobal.indexNoteCourante = etatGlobal.listNote.getIdByNote(note);
-        //console.log("Etat ::" +  etatGlobal.listNote.getIdByNote(note))
-        //if (etatGlobal.indexNoteCourante >= this.listeNotes.length)
-        //if (etatGlobal.listNote.getLength() > etatGlobal.indexNoteCourante)
-        //if(this.isEditing)
         if (etatGlobal.indexNoteCourante < etatGlobal.listNote.getLength())
         {
             console.log("ON MODIFIE")
@@ -319,8 +285,6 @@ let noteFormView = {
         {
             console.log("ON CREE")
             etatGlobal.listNote.addNote(note);
-            //etatGlobal.indexNoteCourante = etatGlobal.listNote.getIdByNote(note);
-            //etatGlobal.indexNoteCourante = etatGlobal.listNote.getLength() - 1;
             console.log("Etat !:" +  etatGlobal.indexNoteCourante);
             noteListMenuView.displayItem(note);
         }
