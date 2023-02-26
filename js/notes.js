@@ -253,9 +253,11 @@ let noteListMenuView = {
 
     noteDelSelect()
     {
-        etatGlobal.indexNoteCourante --;
-        if (etatGlobal.indexNoteCourante < 0) return;
+        if (etatGlobal.indexNoteCourante > 0 || etatGlobal.listNote.getLength() === 0)
+            etatGlobal.indexNoteCourante --;
+        console.log(etatGlobal.indexNoteCourante);
         let nodes = document.querySelector('#noteListMenu').childNodes;
+        if (etatGlobal.listNote.getLength() === 0) return;
         nodes[etatGlobal.indexNoteCourante].classList.add('note_list_item-selected');
     },
 
