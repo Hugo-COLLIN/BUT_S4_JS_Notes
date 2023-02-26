@@ -254,6 +254,14 @@ let noteListMenuView = {
         };
     },
 
+    noteDelSelect()
+    {
+        etatGlobal.indexNoteCourante --;
+        if (etatGlobal.indexNoteCourante < 0) return;
+        let nodes = document.querySelector('#noteListMenu').childNodes;
+        nodes[etatGlobal.indexNoteCourante].classList.add('note_list_item-selected');
+    },
+
     noteInit(noteList)
     {
         const l = noteList.getLength();
@@ -342,6 +350,17 @@ let noteFormView = {
 
         noteFormView.clear();
         console.log("Formulaire validé");
+    },
+
+    showPreviousNote()
+    {
+        if (etatGlobal.indexNoteCourante < 0) return;
+        let note = etatGlobal.listNote.getNoteById(etatGlobal.indexNoteCourante);
+        console.log(etatGlobal.indexNoteCourante)
+        console.log(note)
+        let vueNote = new NoteView(note);
+        console.log(vueNote)
+        vueNote.afficherHtml();
     }
 };
 
@@ -361,10 +380,15 @@ let mainMenuView = {
     {
         console.log("Clic: Supprimer la note courante");
         let noteId = etatGlobal.indexNoteCourante;
+        if (noteId === null || noteId < 0) return;
+        console.log(noteId)
         etatGlobal.listNote.delNote(noteId);
         let note = etatGlobal.listNote.getNoteById(noteId);
         noteListMenuView.removeCurrentItem();
-        document.querySelector("#currentNoteView").innerHTML = "";
+        noteListMenuView.noteDelSelect();
+        noteFormView.showPreviousNote();
+        //document.querySelector("#currentNoteView").innerHTML = "";
+        //noteListMenuView.noteSelection();
     },
 
     editHandler()
