@@ -105,9 +105,6 @@ class NoteView
 class NoteList
 {
     constructor() {
-        //localStorage.clear();
-        //if (this.listeNotes === null)
-        //console.log(this.listeNotes)
         this.listeNotes = [];
         this.load();
     }
@@ -356,10 +353,7 @@ let noteFormView = {
     {
         if (etatGlobal.indexNoteCourante < 0) return;
         let note = etatGlobal.listNote.getNoteById(etatGlobal.indexNoteCourante);
-        console.log(etatGlobal.indexNoteCourante)
-        console.log(note)
         let vueNote = new NoteView(note);
-        console.log(vueNote)
         vueNote.afficherHtml();
     }
 };
@@ -372,7 +366,6 @@ let mainMenuView = {
     {
         console.log("Clic: Nouvelle note");
         noteFormView.create();
-        //noteFormView.isEditing = false;
         document.querySelector("#currentNoteView").innerHTML = "";
     },
 
@@ -380,22 +373,20 @@ let mainMenuView = {
     {
         console.log("Clic: Supprimer la note courante");
         let noteId = etatGlobal.indexNoteCourante;
+        document.querySelector("#currentNoteView").innerHTML = "";
         if (noteId === null || noteId < 0) return;
-        console.log(noteId)
+
         etatGlobal.listNote.delNote(noteId);
         let note = etatGlobal.listNote.getNoteById(noteId);
         noteListMenuView.removeCurrentItem();
         noteListMenuView.noteDelSelect();
         noteFormView.showPreviousNote();
-        //document.querySelector("#currentNoteView").innerHTML = "";
-        //noteListMenuView.noteSelection();
     },
 
     editHandler()
     {
         console.log("Clic: Modifier la note courante");
         noteFormView.edit();
-        //noteFormView.isEditing = true;
         document.querySelector("#currentNoteView").innerHTML = "";
     },
 
