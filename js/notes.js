@@ -154,19 +154,14 @@ class NoteList
 
     save()
     {
-        console.log(this.listeNotes)
-        console.log(JSON.stringify(this))
         localStorage.setItem("listeNotes", JSON.stringify(this.listeNotes));
-        console.log(JSON.parse(localStorage.getItem("listeNotes")))
     }
 
     load()
     {
         let jl = JSON.parse(localStorage.getItem("listeNotes"));
-        console.log(jl);
         if (jl === null) return;
         for (let i = 0 ; i < jl.length ; i ++) {
-            console.log(jl[i]);
             this.listeNotes.push(new Note(jl[i].titre, jl[i].contenu, new Date(jl[i].date_creation)));
         }
     }
@@ -262,7 +257,6 @@ let noteListMenuView = {
     noteInit(noteList)
     {
         const l = noteList.getLength();
-        console.log(l)
         if (l !== 0) {
             etatGlobal.indexNoteCourante = l - 1;
             let note = etatGlobal.listNote.getNoteById(l - 1);
@@ -309,11 +303,7 @@ let noteFormView = {
 
     edit()
     {
-        console.log(etatGlobal.indexNoteCourante)
         let n = etatGlobal.listNote.getNoteById(etatGlobal.indexNoteCourante);
-        console.log(etatGlobal.listNote)
-        console.log(n)
-        console.log(etatGlobal.listNote.indexNoteCourante)
         if (n === undefined) return;
         document.getElementById("form_add_note_title").value = n.titre;
         document.getElementById("form_add_note_text").value = n.contenu;
@@ -335,9 +325,7 @@ let noteFormView = {
 
         if (etatGlobal.indexNoteCourante < etatGlobal.listNote.getLength())
         {
-            console.log("ON MODIFIE")
-            console.log("Etat !:" +  etatGlobal.indexNoteCourante)
-            console.log(note)
+            console.log("ON MODIFIE");
             etatGlobal.listNote.editNote(etatGlobal.indexNoteCourante, note);
             noteListMenuView.modifyCurrentItem(note);
         }
@@ -345,7 +333,6 @@ let noteFormView = {
         {
             console.log("ON CREE")
             etatGlobal.listNote.addNote(note);
-            console.log("Etat !:" +  etatGlobal.indexNoteCourante);
             noteListMenuView.displayItem(note);
         }
 
@@ -354,8 +341,6 @@ let noteFormView = {
         vueNote.afficherHtml();
 
         noteFormView.clear();
-        //this.isEditing = false;
-        console.log(etatGlobal.listNote.getList()/*.length*/)
         console.log("Formulaire validé");
     }
 };
