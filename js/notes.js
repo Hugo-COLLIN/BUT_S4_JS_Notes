@@ -9,11 +9,11 @@
  */
 class Note
 {
-    constructor(titre, contenu)
+    constructor(titre, contenu, date_creation = new Date())
     {
         this.titre = titre;
         this.contenu = contenu;
-        this.date_creation = new Date();
+        this.date_creation = date_creation;
 
         if (titre === "") this.setDefaultName();
     }
@@ -26,6 +26,11 @@ class Note
     setContenu(contenu)
     {
         this.contenu = contenu;
+    }
+
+    setDateCreation(date)
+    {
+        this.date_creation = date;
     }
 
     setDefaultName()
@@ -100,18 +105,24 @@ class NoteView
 class NoteList
 {
     constructor() {
+        //localStorage.clear();
+        //if (this.listeNotes === null)
+        //console.log(this.listeNotes)
         this.listeNotes = [];
+        this.load();
     }
 
     addNote(note)
     {
         this.listeNotes.push(note);
+        this.save();
     }
 
     delNote(noteId)
     {
         if (noteId > -1) { // only splice array when item is found
             this.listeNotes.splice(noteId, 1); // 2nd parameter means remove one item only
+            this.save();
         }
     }
 
@@ -119,6 +130,7 @@ class NoteList
     {
         if (noteId > -1) {
             this.listeNotes[noteId] = newNote;
+            this.save();
         }
     }
 
@@ -138,6 +150,25 @@ class NoteList
     getList()
     {
         return this.listeNotes;
+    }
+
+    save()
+    {
+        console.log(this.listeNotes)
+        console.log(JSON.stringify(this))
+        localStorage.setItem("listeNotes", JSON.stringify(this.listeNotes));
+        console.log(JSON.parse(localStorage.getItem("listeNotes")))
+    }
+
+    load()
+    {
+        let jl = JSON.parse(localStorage.getItem("listeNotes"));
+        console.log(jl);
+        if (jl === null) return;
+        for (let i = 0 ; i < jl.length ; i ++) {
+            console.log(jl[i]);
+            this.listeNotes.push(new Note(jl[i].titre, jl[i].contenu, new Date(jl[i].date_creation)));
+        }
     }
 
     getLength()
@@ -222,11 +253,20 @@ let noteListMenuView = {
         };
     },
 
+    noteInit(noteList)
+    {
+        for (let i = 0; i < noteList.getList().length; i++) {
+            this.displayItem(noteList.getNoteById(i));
+        }
+
+    },
+
     init()
     {
         console.log("Initialisation de la liste de notes")
         document.querySelector('#noteListMenu').onclick =
             noteListMenuView.noteSelection();
+        noteListMenuView.noteInit(etatGlobal.listNote);
     }
 }
 
@@ -292,7 +332,7 @@ let noteFormView = {
 
         let vueNote = new NoteView(note);
         vueNote.afficherHtml();
-        
+
         noteFormView.clear();
         this.isEditing = false;
         console.log(etatGlobal.listNote.getList()/*.length*/)
