@@ -171,6 +171,12 @@ class NoteList
         }
     }
 
+    clear()
+    {
+        this.listeNotes = [];
+        localStorage.clear();
+    }
+
     getLength()
     {
         return this.listeNotes.length;
@@ -255,7 +261,16 @@ let noteListMenuView = {
 
     noteInit(noteList)
     {
-        for (let i = 0; i < noteList.getList().length; i++) {
+        const l = noteList.getLength();
+        console.log(l)
+        if (l !== 0) {
+            etatGlobal.indexNoteCourante = l - 1;
+            let note = etatGlobal.listNote.getNoteById(l - 1);
+            let vueNote = new NoteView(note);
+            vueNote.afficherHtml();
+        }
+
+        for (let i = 0; i < l; i++) {
             this.displayItem(noteList.getNoteById(i));
         }
 
@@ -294,7 +309,12 @@ let noteFormView = {
 
     edit()
     {
-        const n = etatGlobal.listNote.getNoteById(etatGlobal.indexNoteCourante);
+        console.log(etatGlobal.indexNoteCourante)
+        let n = etatGlobal.listNote.getNoteById(etatGlobal.indexNoteCourante);
+        console.log(etatGlobal.listNote)
+        console.log(n)
+        console.log(etatGlobal.listNote.indexNoteCourante)
+        if (n === undefined) return;
         document.getElementById("form_add_note_title").value = n.titre;
         document.getElementById("form_add_note_text").value = n.contenu;
         noteFormView.display();
@@ -334,7 +354,7 @@ let noteFormView = {
         vueNote.afficherHtml();
 
         noteFormView.clear();
-        this.isEditing = false;
+        //this.isEditing = false;
         console.log(etatGlobal.listNote.getList()/*.length*/)
         console.log("Formulaire validé");
     }
